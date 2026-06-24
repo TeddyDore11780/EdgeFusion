@@ -1,0 +1,27 @@
+# Node.js
+node_modules/
+
+# Environment Variables
+.env
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+
+# Build folders
+dist/
+build/
+
+# Coverage
+coverage/
+
+# VS Code
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
