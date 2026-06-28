@@ -1,17 +1,30 @@
 services:
-
   mosquitto:
     build:
       context: ./mqtt
     container_name: edgefusion-mqtt
-
     ports:
       - "1883:1883"
-
     volumes:
       - mqtt-data:/mosquitto/data
       - mqtt-log:/mosquitto/log
+    restart: unless-stopped
 
+  gateway:
+    build:
+      context: ./gateway
+    container_name: edgefusion-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
+      MQTT_BROKER_URL: mqtt://mosquitto:1883
+      MQTT_SENSOR_TOPIC: sensor/data
+      DATABASE_NAME: edgefusion.db
+      LOG_LEVEL: INFO
+      OPENFAAS_URL: http://openfaas:8080
+    depends_on:
+      - mosquitto
     restart: unless-stopped
 
 volumes:
