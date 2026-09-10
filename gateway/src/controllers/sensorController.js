@@ -1,42 +1,61 @@
-/**
- * EdgeFusion Sensor Controller
- */
-
-const sensorReadings = [];
+const {
+    getAllSensorData,
+    getLatestSensorData,
+    getHighTemperatureData
+} = require("../database/sqliteService");
 
 function getSensors(req, res) {
-    res.json({
-        count: sensorReadings.length,
-        data: sensorReadings
+    getAllSensorData((error, rows) => {
+        if (error) {
+            return res.status(500).json({
+                success: false,
+                error: error.message
+            });
+        }
+
+        res.json({
+            success: true,
+            count: rows.length,
+            data: rows
+        });
     });
 }
 
-function createSensorReading(req, res) {
-    const { temperature, humidity, deviceId } = req.body;
+function getLatestSensor(req, res) {
+    getLatestSensorData((error, row) => {
+        if (error) {
+            return res.status(500).json({
+                success: false,
+                error: error.message
+            });
+        }
 
-    if (temperature === undefined || humidity === undefined) {
-        return res.status(400).json({
-            error: "temperature and humidity are required"
+        res.json({
+            success: true,
+            data: row || null
         });
-    }
+    });
+}
 
-    const reading = {
-        id: sensorReadings.length + 1,
-        deviceId: deviceId || "unknown-device",
-        temperature,
-        humidity,
-        timestamp: new Date().toISOString()
-    };
+function getHighTemperatureSensors(req, res) {
+    getHighTemperatureData((error, rows) => {
+        if (error) {
+            return res.status(500).json({
+                success: false,
+                error: error.message
+            });
+        }
 
-    sensorReadings.push(reading);
-
-    res.status(201).json({
-        message: "Sensor reading received",
-        data: reading
+        res.json({
+            success: true,
+            count: rows.length,
+            data: rows
+        });
     });
 }
 
 module.exports = {
     getSensors,
-    createSensorReading
+    getLatestSensor,
+    getHighTemperatureSensors
 };

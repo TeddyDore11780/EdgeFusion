@@ -27,6 +27,23 @@ export async function getHighTemperatureSensors() {
     return response.data;
 }
 
+/*
+|--------------------------------------------------------------------------
+| Alerts
+|--------------------------------------------------------------------------
+*/
+
+export async function getAlerts() {
+    const response = await api.get("/alerts");
+    return response.data;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Gateway
+|--------------------------------------------------------------------------
+*/
+
 export async function getGatewayHealth() {
     const response = await api.get("/health");
     return response.data;
@@ -34,6 +51,17 @@ export async function getGatewayHealth() {
 
 export async function getGatewayStatus() {
     const response = await api.get("/status");
+    return response.data;
+}
+
+/*
+|--------------------------------------------------------------------------
+| System
+|--------------------------------------------------------------------------
+*/
+
+export async function getSystemStatus() {
+    const response = await api.get("/system");
     return response.data;
 }
 

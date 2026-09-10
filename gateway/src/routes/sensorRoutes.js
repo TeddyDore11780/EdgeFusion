@@ -1,16 +1,14 @@
-/**
- * EdgeFusion Sensor Routes
- */
-
 const express = require("express");
 const {
     getSensors,
-    createSensorReading
+    getLatestSensor,
+    getHighTemperatureSensors
 } = require("../controllers/sensorController");
 
 const router = express.Router();
 
 router.get("/", getSensors);
-router.post("/", createSensorReading);
+router.get("/latest", getLatestSensor);
+router.get("/high", getHighTemperatureSensors);
 
 module.exports = router;

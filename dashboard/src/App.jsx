@@ -1,6 +1,10 @@
+import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 import Layout from "./components/layout/Layout";
+import SplashScreen from "./components/layout/SplashScreen";
+
 import Dashboard from "./pages/Dashboard";
 import Sensors from "./pages/Sensors";
 import Alerts from "./pages/Alerts";
@@ -10,6 +14,20 @@ import System from "./pages/System";
 import "./styles/global.css";
 
 export default function App() {
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setLoading(false);
+        }, 2500);
+
+        return () => clearTimeout(timer);
+    }, []);
+
+    if (loading) {
+        return <SplashScreen />;
+    }
+
     return (
         <BrowserRouter>
             <Layout>
@@ -21,6 +39,8 @@ export default function App() {
                     <Route path="/system" element={<System />} />
                 </Routes>
             </Layout>
+
+            <Toaster position="top-right" />
         </BrowserRouter>
     );
 }

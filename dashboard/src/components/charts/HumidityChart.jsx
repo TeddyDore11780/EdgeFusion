@@ -22,7 +22,7 @@ export default function HumidityChart({ data }) {
 
             <ResponsiveContainer
                 width="100%"
-                height={320}
+                height={170}
             >
 
                 <AreaChart data={chartData}>

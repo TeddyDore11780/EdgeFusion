@@ -19,14 +19,36 @@ services:
     environment:
       PORT: 3000
       MQTT_BROKER_URL: mqtt://mosquitto:1883
-      MQTT_SENSOR_TOPIC: sensor/data
+      SENSOR_TOPIC: sensor/data
       DATABASE_NAME: edgefusion.db
       LOG_LEVEL: INFO
-      OPENFAAS_URL: http://openfaas:8080
+      OPENFAAS_FUNCTION_URL: http://k3d-edgefusion-server-0:31112/function/process-sensor-data
+    volumes:
+      - ./gateway/database:/app/database
     depends_on:
       - mosquitto
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - default
+      - k3d-edgefusion
+    restart: unless-stopped
+
+  dashboard:
+    build:
+      context: ./dashboard
+    container_name: edgefusion-dashboard
+    ports:
+      - "5173:80"
+    depends_on:
+      - gateway
     restart: unless-stopped
 
 volumes:
   mqtt-data:
   mqtt-log:
+
+networks:
+  k3d-edgefusion:
+    external: true
+    name: k3d-edgefusion

@@ -1,33 +1,41 @@
+import SensorRow from "../sensors/SensorRow";
+
 export default function SensorTable({ sensors }) {
     return (
         <div className="table-card">
-            <h3>Latest Sensor Readings</h3>
+            <div className="table-header">
+                <div>
+                    <h3>Live Sensor Monitoring</h3>
+                    <p>Latest processed readings from the edge gateway.</p>
+                </div>
+            </div>
 
             <table>
                 <thead>
                     <tr>
                         <th>Device</th>
+                        <th>Status</th>
                         <th>Temperature</th>
                         <th>Humidity</th>
-                        <th>Status</th>
-                        <th>Processed At</th>
+                        <th>Light</th>
+                        <th>Motion</th>
+                        <th>Last Update</th>
+                        <th>Health</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    {sensors.map((sensor) => (
-                        <tr key={sensor.id}>
-                            <td>{sensor.deviceId}</td>
-                            <td>{sensor.temperature}°C</td>
-                            <td>{sensor.humidity}%</td>
-                            <td>
-                                <span className={`badge ${sensor.status === "HIGH_TEMPERATURE" ? "danger" : "success"}`}>
-                                    {sensor.status}
-                                </span>
+                    {sensors.length > 0 ? (
+                        sensors.map((sensor) => (
+                            <SensorRow key={sensor.id} sensor={sensor} />
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="8" className="empty-table">
+                                No sensor data available.
                             </td>
-                            <td>{sensor.processedAt}</td>
                         </tr>
-                    ))}
+                    )}
                 </tbody>
             </table>
         </div>

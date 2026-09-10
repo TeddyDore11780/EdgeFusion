@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
+import socket from "../services/socket";
 import PageHeader from "../components/layout/PageHeader";
 import MetricCard from "../components/cards/MetricCard";
 import TemperatureChart from "../components/charts/TemperatureChart";
@@ -25,8 +27,27 @@ export default function Dashboard() {
     useEffect(() => {
         loadDashboard();
 
-        const interval = setInterval(loadDashboard, 5000);
-        return () => clearInterval(interval);
+        socket.on("gateway:connected", (message) => {
+            console.log("Socket connected:", message);
+        });
+
+        socket.on("sensor:processed", (data) => {
+            console.log("Live sensor update:", data);
+
+            toast.success(
+                `${data.deviceId} • ${data.temperature}°C • ${data.humidity}%`,
+                {
+                    duration: 4000,
+                }
+            );
+
+            loadDashboard();
+        });
+
+        return () => {
+            socket.off("gateway:connected");
+            socket.off("sensor:processed");
+        };
     }, []);
 
     if (loading) {
@@ -75,6 +96,13 @@ export default function Dashboard() {
                     subtitle="Across stored records"
                     type="green"
                 />
+
+                <MetricCard
+    title="Light Level"
+    value={latest?.light ?? 0}
+    subtitle="Current LDR reading"
+    type="blue"
+/>
             </div>
 
             <div className="dashboard-grid">
