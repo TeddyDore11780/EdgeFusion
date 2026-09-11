@@ -4,6 +4,10 @@ let io = null;
 let connectedClients = 0;
 let totalEventsEmitted = 0;
 
+// =====================================================
+// INITIALIZE SOCKET.IO
+// =====================================================
+
 function initializeSocket(server) {
     io = new Server(server, {
         cors: {
@@ -23,24 +27,41 @@ function initializeSocket(server) {
         });
 
         socket.on("disconnect", () => {
-            connectedClients = Math.max(connectedClients - 1, 0);
-            console.log("Dashboard disconnected:", socket.id);
+            connectedClients = Math.max(
+                connectedClients - 1,
+                0
+            );
+
+            console.log(
+                "Dashboard disconnected:",
+                socket.id
+            );
         });
     });
 }
 
+// =====================================================
+// SENSOR PROCESSED EVENT
+// =====================================================
+
 function emitSensorProcessed(data) {
-    if (io) {
-        totalEventsEmitted += 1;
-        io.emit("sensor:processed", data);
-    }
+    if (!io) return;
+
+    totalEventsEmitted += 1;
+
+    io.emit("sensor:processed", data);
 }
 
+// =====================================================
+// ALERT CREATED EVENT
+// =====================================================
+
 function emitAlertCreated(data) {
-    if (io) {
-        totalEventsEmitted += 1;
-        io.emit("alert:created", data);
-    }
+    if (!io) return;
+
+    totalEventsEmitted += 1;
+
+    io.emit("alert:created", data);
 }
 
 // =====================================================
@@ -48,14 +69,52 @@ function emitAlertCreated(data) {
 // =====================================================
 
 function emitLedState(data) {
-    if (io) {
-        totalEventsEmitted += 1;
+    if (!io) return;
 
-        io.emit("led:state", data);
+    totalEventsEmitted += 1;
 
-        console.log("LED state emitted:", data);
-    }
+    io.emit("led:state", data);
+
+    console.log("LED state emitted:", data);
 }
+
+// =====================================================
+// SENSOR LED STATE
+// =====================================================
+
+function emitSensorLedState(data) {
+    if (!io) return;
+
+    totalEventsEmitted += 1;
+
+    io.emit("sensor:led:state", data);
+
+    console.log(
+        "Sensor LED state emitted:",
+        data
+    );
+}
+
+// =====================================================
+// HARDWARE STATE
+// =====================================================
+
+function emitHardwareState(data) {
+    if (!io) return;
+
+    totalEventsEmitted += 1;
+
+    io.emit("hardware:state", data);
+
+    console.log(
+        "Hardware state emitted:",
+        data
+    );
+}
+
+// =====================================================
+// SOCKET STATISTICS
+// =====================================================
 
 function getSocketStats() {
     return {
@@ -65,10 +124,16 @@ function getSocketStats() {
     };
 }
 
+// =====================================================
+// EXPORTS
+// =====================================================
+
 module.exports = {
     initializeSocket,
     emitSensorProcessed,
     emitAlertCreated,
     emitLedState,
+    emitSensorLedState,
+    emitHardwareState,
     getSocketStats
 };

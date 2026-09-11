@@ -75,7 +75,7 @@ export default function System() {
             setLedMessage("");
 
             const response = await fetch(
-                "http://localhost:3000/api/v1/system/led",
+                "http://10.196.164.205:3000/api/v1/system/led",
                 {
                     method: "POST",
                     headers: {
@@ -744,7 +744,7 @@ export default function System() {
                             </span>
 
                             <strong>
-                                http://localhost:3000
+                                http://10.196.164.205:3000
                             </strong>
                         </div>
 
